@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -g
 TARGET = app
-SRCS = main.c elloc.h
+SRCS = src/main.c src/elloc.h
 
 all: $(TARGET)
 
