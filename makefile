@@ -1,11 +1,11 @@
 CC = gcc
 CFLAGS = -Wall -g
 TARGET = app
-SRCS = main.c main.h
+SRCS = main.c elloc.h
 
 all: $(TARGET)
 
-$(TARGET) : $(SRCS)
+$(TARGET): $(SRCS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)
 
 clear:
