@@ -8,6 +8,7 @@ typedef struct used_chunks_double_list used_chunks_double_list;
 void split_chunk(chunks_double_list *chunk, size_t size);
 void extend_heap();
 int merge_chunk(chunks_double_list *a, chunks_double_list *b);
+int get_chunk_size(chunks_double_list *chunk);
 
 struct chunks_double_list{
     size_t size;
