@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include "defs.h"
 
@@ -6,8 +7,8 @@ char *elloc(size_t size) {
     if (mtda.heap_start == NULL) {
         mtda.heap_start = sbrk(0);
 
-        sbrk(size + CHUNK_SIZE + 1);
-        mtda.total_size = size + CHUNK_SIZE + 1;
+        sbrk(size + CHUNK_SIZE);
+        mtda.total_size = size + CHUNK_SIZE;
         mtda.total_number_of_chunks = 1;
 
         mtda.heap_end = sbrk(0);
@@ -52,9 +53,9 @@ void extend_heap() {
     /*
     Don't call this if you have not initialized the heap yet.
     */
-    sbrk(mtda.total_size * 2);
+    sbrk(mtda.total_size);
 
-    chunks_double_list *new_chunk = (chunks_double_list *) (mtda.heap_end + 1);
+    chunks_double_list *new_chunk = (chunks_double_list *) (mtda.heap_end);
     new_chunk->is_used = false;
     new_chunk->size = mtda.total_size - CHUNK_SIZE;
 
@@ -110,7 +111,7 @@ void split_chunk(chunks_double_list *chunk, size_t size) {
     }
 
     // this CHUNK_SIZE is for the data of the first chunk
-    chunks_double_list *new_chunk = (chunks_double_list *) (((char *) chunk) + size + CHUNK_SIZE + 1);
+    chunks_double_list *new_chunk = (chunks_double_list *) (((char *) chunk) + size + CHUNK_SIZE);
 
     new_chunk->is_used = false;
 
