@@ -79,11 +79,11 @@ Test(test_elloc_interface, test_for_different_sizes) {
 }
 
 Test(test_elloc_interface, test_zero_elloc) {
-    cr_assert_eq(elloc(0), nullptr);
+    cr_assert_eq(elloc(0),  NULL);
 }
 
 Test(test_elloc_interface, test_negative_elloc) {
-    cr_assert_eq(elloc(-1), nullptr);
+    cr_assert_eq(elloc(-1),  NULL);
 }
 
 Test(test_elloc_interface, test_sequential_efree) {
@@ -162,7 +162,7 @@ Test(test_elloc_interface, test_double_efree) {
 }
 
 Test(test_elloc_interface, test_null_efree) {
-    cr_assert_eq(efree(nullptr), 1);
+    cr_assert_eq(efree( NULL), 1);
 }
 
 
