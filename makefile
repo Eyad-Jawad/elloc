@@ -1,12 +1,28 @@
 CC = gcc
-CFLAGS = -Wall -g
+
+CFLAGS = -Wall -Wextra -Werror -g
+MEMORYFLAGS = -fsanitize=address -fno-omit-frame-pointer
+LIBS = -lcriterion
+
 TARGET = app
-SRCS = src/main.c src/elloc.h
+TESTTARGET = test_runner
+
+SRCS = $(wildcard src/*.c)
+TESTSRCS = $(wildcard tests/*.c) $(filter-out src/main.c, $(wildcard src/*.c))
+
+.PHONY: all test clean
+
 
 all: $(TARGET)
 
-$(TARGET): $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET)
+test: $(TESTTARGET)
+	./$(TESTTARGET)
 
-clear:
-	rm -f $(TARGET)
+$(TARGET): $(SRCS)
+	$(CC) $(CFLAGS) $(MEMORYFLAGS) $^ -o $@
+
+$(TESTTARGET): $(TESTSRCS)
+	$(CC) $(CFLAGS) $(MEMORYFLAGS) $^ -o $@ $(LIBS)
+
+clean:
+	rm -f $(TARGET) $(TESTTARGET)

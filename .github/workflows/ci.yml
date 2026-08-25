@@ -1,0 +1,33 @@
+name: Test Elloc
+
+on: 
+  push: 
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+    
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout The Repository
+        uses: actions/checkout@v7
+
+      - name: Update packages 
+        run: sudo apt update
+      
+      - name: Install Criterion
+        run: sudo apt install libcriterion-dev
+      
+      - name: Install make
+        run: sudo apt install make
+      
+      - name: Compile and run the unit tests
+        run: make test
