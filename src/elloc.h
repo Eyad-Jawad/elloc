@@ -3,6 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdalign.h>
+#include <stddef.h>
 #include <limits.h>
 
 typedef struct chunks_double_list chunks_double_list;
@@ -26,7 +28,7 @@ struct chunks_double_list{
 
 typedef struct {
     int total_number_of_chunks;
-    long long total_size;
+    size_t total_size;
     chunks_double_list *first_chunk;
     chunks_double_list *last_chunk;
     char *heap_start;

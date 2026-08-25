@@ -79,11 +79,11 @@ Test(test_elloc_interface, test_for_different_sizes) {
 }
 
 Test(test_elloc_interface, test_zero_elloc) {
-    cr_assert_eq(elloc(0), NULL);
+    cr_assert_eq(elloc(0), nullptr);
 }
 
 Test(test_elloc_interface, test_negative_elloc) {
-    cr_assert_eq(elloc(-1), NULL);
+    cr_assert_eq(elloc(-1), nullptr);
 }
 
 Test(test_elloc_interface, test_sequential_efree) {
@@ -162,7 +162,7 @@ Test(test_elloc_interface, test_double_efree) {
 }
 
 Test(test_elloc_interface, test_null_efree) {
-    cr_assert_eq(efree(NULL), 1);
+    cr_assert_eq(efree(nullptr), 1);
 }
 
 
@@ -189,4 +189,16 @@ Test(test_elloc_interface, test_reuse_memory) {
     cr_expect_str_eq(b, "foo");
 
     cr_assert_eq(efree(b), 0);
+}
+
+Test(test_elloc_interface, test_alignment) {
+    for (int i = 1; i < 1000; i++) {
+        char *str = elloc(i);
+
+        int alignment = (long long) str % alignof(max_align_t);
+        
+        cr_assert_eq(alignment, 0);
+
+        efree(str);
+    }
 }

@@ -4,30 +4,31 @@
 metadata mtda = {
     .total_number_of_chunks = 0,
     .total_size = 0,
-    .first_chunk = NULL,
-    .last_chunk = NULL,
-    .heap_start = NULL,
-    .heap_end = NULL,
+    .first_chunk = nullptr,
+    .last_chunk = nullptr,
+    .heap_start = nullptr,
+    .heap_end = nullptr,
 };
 
 char *elloc(long long int given_size) {
     /*
-    zero or negative sizes return NULL ptr
+    zero or negative sizes return nullptr ptr
     if the total allocation is bigger than the 
     max int which is 2gb or 4gb depending on the os
-    a NULL ptr will be returned, though it doesn't check 
+    a nullptr ptr will be returned, though it doesn't check 
     for the actual totoal available memory though it includes
     the size of the chunk metadata
     */
+
     if (given_size <= 0)
-        return NULL;
+        return nullptr;
     
-    size_t size = given_size;
+    size_t size = given_size + given_size % alignof(max_align_t);
 
     if (mtda.total_size + size >= INT_MAX) 
-        return NULL;
+        return nullptr;
     
-    if (mtda.heap_start == NULL) {
+    if (mtda.heap_start == nullptr) {
         mtda.heap_start = sbrk(0);
 
         sbrk(size + CHUNK_SIZE);
@@ -40,13 +41,14 @@ char *elloc(long long int given_size) {
 
         chunk->size = get_chunk_size(chunk);
         chunk->is_used = false;
-        chunk->next = NULL;
-        chunk->past = NULL;
+        chunk->next = nullptr;
+        chunk->past = nullptr;
 
         mtda.first_chunk = chunk;
     }
+
     while (1) {
-        for (chunks_double_list *i = mtda.first_chunk; i != NULL; i = i->next) {
+        for (chunks_double_list *i = mtda.first_chunk; i != nullptr; i = i->next) {
             if (i->size >= size && !i->is_used) {
                 split_chunk(i, size);
                 i->is_used = true;
@@ -65,7 +67,7 @@ int efree(char *location) {
     2 error: already freed memory
     */
 
-    if (location == NULL) 
+    if (location == nullptr) 
         return 1;
     
     if (location <= mtda.heap_start || location > mtda.heap_end) 
@@ -78,11 +80,13 @@ int efree(char *location) {
 
     chunk->is_used = false;
     int merge;
-    if (chunk->next != NULL) {
+
+    if (chunk->next != nullptr) {
         merge = merge_chunk(chunk, chunk->next);
         if (merge == 0) mtda.total_number_of_chunks--;
-    } 
-    if (chunk->past != NULL) {
+    }
+
+    if (chunk->past != nullptr) {
         merge = merge_chunk(chunk->past, chunk);
         if (merge == 0) mtda.total_number_of_chunks--;
     }
@@ -101,7 +105,7 @@ void extend_heap() {
     new_chunk->size = mtda.total_size - CHUNK_SIZE;
 
     new_chunk->past = mtda.last_chunk;
-    if (mtda.last_chunk == NULL) {
+    if (mtda.last_chunk == nullptr) {
         new_chunk->past = mtda.first_chunk;
         mtda.first_chunk->next = new_chunk;
     } else {
@@ -132,7 +136,7 @@ int merge_chunk(chunks_double_list *a, chunks_double_list *b) {
     if (mtda.last_chunk == b) {
         mtda.last_chunk = a;
         if (a == mtda.first_chunk)
-            mtda.last_chunk = NULL;
+            mtda.last_chunk = nullptr;
     } else {
         b->next->past = a;
     }
