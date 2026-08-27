@@ -262,27 +262,25 @@ void split_chunk(avl_tree *chunk, size_t size) {
             CHUNK_SIZE
         );
 
-    root = delete_chunk(root, chunk);
+    size_t new_size =
+        old_size - size - CHUNK_SIZE;
 
-    new_chunk->right = NULL;
-    new_chunk->left = NULL;
-    new_chunk->height = 1;
-    new_chunk->is_used = false;
+    root = delete_chunk(root, chunk);
 
     chunk->size = size;
 
-    new_chunk->size =
-        old_size - size - CHUNK_SIZE;
+    new_chunk->left = NULL;
+    new_chunk->right = NULL;
+    new_chunk->height = 1;
+    new_chunk->is_used = false;
 
-    new_chunk->prev_size =
-        chunk->size;
+    new_chunk->size = new_size;
+    new_chunk->prev_size = chunk->size;
 
-    avl_tree *next_chunk =
-        get_next_chunk(new_chunk);
+    avl_tree *next_chunk = get_next_chunk(new_chunk);
 
     if (next_chunk != NULL)
-        next_chunk->prev_size =
-            new_chunk->size;
+        next_chunk->prev_size = new_chunk->size;
 
     root = insert_chunk(root, chunk);
     root = insert_chunk(root, new_chunk);
@@ -292,7 +290,6 @@ void split_chunk(avl_tree *chunk, size_t size) {
     if (mtda.last_chunk == chunk)
         mtda.last_chunk = new_chunk;
 }
-
 
 size_t get_chunk_size(avl_tree *chunk) {
     avl_tree *next_chunk =

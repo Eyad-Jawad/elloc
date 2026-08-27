@@ -73,8 +73,12 @@ static int compare_nodes(avl_tree *a, avl_tree *b) {
 
 
 avl_tree *insert_chunk(avl_tree *root, avl_tree *node) {
-    if (root == NULL)
+    if (root == NULL) {
+        node->left = NULL;
+        node->right = NULL;
+        node->height = 1;
         return node;
+    }
 
     if (compare_nodes(node, root) < 0)
         root->left = insert_chunk(root->left, node);
@@ -110,7 +114,6 @@ avl_tree *insert_chunk(avl_tree *root, avl_tree *node) {
 
     return root;
 }
-
 
 avl_tree *min_value_node(avl_tree *node) {
     avl_tree *current = node;

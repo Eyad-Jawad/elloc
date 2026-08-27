@@ -1,7 +1,7 @@
 CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror -g
-MEMORYFLAGS = # -fsanitize=address -fno-omit-frame-pointer
+MEMORYFLAGS = -fsanitize=address -fno-omit-frame-pointer
 LIBS = -lcriterion
 
 TARGET = app
